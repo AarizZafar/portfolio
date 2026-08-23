@@ -39,7 +39,7 @@ export default function Hero() {
           <div className="lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 gap-5 lg:gap-6">
             <Reveal delay={0.08} className="col-span-2 lg:col-span-1">
               <div className="portrait-card relative overflow-hidden min-h-[360px] lg:h-[390px]">
-                <img src="/profile.jpg" alt={profile.name} className="absolute inset-0 w-full h-full object-cover" />
+                <img src={`${import.meta.env.BASE_URL}profile.jpg`} alt={profile.name} className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#071b3a]/85 via-transparent to-blue-100/10" />
                 <div className="absolute left-5 right-5 bottom-5 flex items-center justify-between text-white">
                   <div><p className="text-xs uppercase tracking-widest text-blue-100/75">Based in</p><p className="mt-1 font-semibold flex items-center gap-1.5"><MapPin size={14} /> {profile.location}</p></div>

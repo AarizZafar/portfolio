@@ -1,3 +1,5 @@
+const asset = path => `${import.meta.env.BASE_URL}${path}`
+
 export const profile = {
   name: 'Aariz Zafar',
   location: 'Bangalore, India',
@@ -35,7 +37,7 @@ export const experience = [
     role: 'AI Engineer',
     location: 'Bangalore, India',
     period: 'Mar 2026 – Present',
-    logo: '/artifacts/company_logo/trinity_mobility.png',
+    logo: asset('artifacts/company_logo/trinity_mobility.png'),
     points: [
       'Designed and developed a machine learning-based Fault Detection and Diagnosis (FDD) framework for HVAC equipment (chillers, AHUs, FCUs) using Python, Scikit-learn, and time-series anomaly detection models, enabling early fault identification from synthetic sensor data.',
       'Built physics-based simulation models using EnergyPlus and Modelica to generate 40+ refrigerant degradation fault scenarios, creating high-quality synthetic datasets to overcome limited real-world training data.',
@@ -47,7 +49,7 @@ export const experience = [
     role: 'Software Engineer (Intern + Full-time)',
     location: 'Bangalore, India',
     period: 'Dec 2024 – Mar 2026',
-    logo: '/artifacts/company_logo/LivNSense.png',
+    logo: asset('artifacts/company_logo/LivNSense.png'),
     points: [
       'Developed an end-to-end machine learning pipeline for asphalt plant optimization using exploratory data analysis, statistical modelling, and anomaly detection on large-scale manufacturing time-series data, improving operational efficiency by 10%.',
       'Designed and deployed a domain-specific RAG solution using LangChain, Hugging Face Transformers, and vector embeddings, reducing engineering knowledge retrieval effort by 30%.',
@@ -59,7 +61,7 @@ export const experience = [
     role: 'Software Engineering Intern',
     location: 'New Delhi, India',
     period: 'Oct 2023 – Dec 2023',
-    logo: '/artifacts/company_logo/Nettech.png',
+    logo: asset('artifacts/company_logo/Nettech.png'),
     points: [
       'Developed a Retrieval-Augmented Generation (RAG) solution using LangChain and SBERT embeddings to enable natural language querying of network device documentation, reducing manual configuration lookup effort by 20%.'
     ]
@@ -70,16 +72,16 @@ export const certificationGroups = [
   {
     heading: 'Microsoft Azure',
     items: [
-      { name: 'Microsoft Azure AZ-500 Security Engineer Associate', logo: '/artifacts/certificates_logo/Az500.png', files: [{ src: '/artifacts/certificates/Az500.pdf', label: 'Certificate' }, { src: '/artifacts/certificates/Az500_score.pdf', label: 'Score report' }] },
-      { name: 'Microsoft Azure AZ-104 Administrator Associate', logo: '/artifacts/certificates_logo/Az104.png', files: [{ src: '/artifacts/certificates/Az104.pdf', label: 'Certificate' }, { src: '/artifacts/certificates/Az104_score_card.pdf', label: 'Score report' }] },
-      { name: 'Microsoft Azure AZ-900 Fundamentals', logo: '/artifacts/certificates_logo/Az900.png', files: [{ src: '/artifacts/certificates/Az900.pdf', label: 'Certificate' }] }
+      { name: 'Microsoft Azure AZ-500 Security Engineer Associate', logo: asset('artifacts/certificates_logo/Az500.png'), files: [{ src: asset('artifacts/certificates/Az500.pdf'), label: 'Certificate' }, { src: asset('artifacts/certificates/Az500_score.pdf'), label: 'Score report' }] },
+      { name: 'Microsoft Azure AZ-104 Administrator Associate', logo: asset('artifacts/certificates_logo/Az104.png'), files: [{ src: asset('artifacts/certificates/Az104.pdf'), label: 'Certificate' }, { src: asset('artifacts/certificates/Az104_score_card.pdf'), label: 'Score report' }] },
+      { name: 'Microsoft Azure AZ-900 Fundamentals', logo: asset('artifacts/certificates_logo/Az900.png'), files: [{ src: asset('artifacts/certificates/Az900.pdf'), label: 'Certificate' }] }
     ]
   },
   {
     heading: 'Machine Learning',
     items: [
-      { name: 'Machine Learning — Boston Training Academy', logo: '/artifacts/certificates_logo/boston.png', files: [{ src: '/artifacts/certificates/Boston_IT.png', label: 'Certificate' }] },
-      { name: 'AI & ML Program — Google Developer (Smart Internz)', logo: '/artifacts/certificates_logo/google.png', files: [{ src: '/artifacts/certificates/Google_developers.jpg', label: 'Certificate' }] }
+      { name: 'Machine Learning — Boston Training Academy', logo: asset('artifacts/certificates_logo/boston.png'), files: [{ src: asset('artifacts/certificates/Boston_IT.png'), label: 'Certificate' }] },
+      { name: 'AI & ML Program — Google Developer (Smart Internz)', logo: asset('artifacts/certificates_logo/google.png'), files: [{ src: asset('artifacts/certificates/Google_developers.jpg'), label: 'Certificate' }] }
     ]
   }
 ]

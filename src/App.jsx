@@ -36,7 +36,7 @@ function Hero({ onEmail }) {
       <div className="hero-actions"><a className="primary-button" href="#work">See my impact <ArrowDownRight size={18} /></a><button className="text-link" onClick={onEmail}>Email me <ArrowUpRight size={17} /></button></div>
     </motion.div>
     <motion.div className="hero-side" initial={{ opacity: 0, x: 34 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .85, delay: .12, ease: [.22, 1, .36, 1] }}>
-      <motion.div className="portrait" whileHover={{ y: -5 }} transition={{ type: 'spring', stiffness: 220, damping: 20 }}><img src="/profile.jpg" alt="Aariz Zafar" /><div className="portrait-caption"><span><MapPin size={14} /> {profile.location}</span><strong>1+ year building applied AI</strong></div></motion.div>
+      <motion.div className="portrait" whileHover={{ y: -5 }} transition={{ type: 'spring', stiffness: 220, damping: 20 }}><img src={`${import.meta.env.BASE_URL}profile.jpg`} alt="Aariz Zafar" /><div className="portrait-caption"><span><MapPin size={14} /> {profile.location}</span><strong>1+ year building applied AI</strong></div></motion.div>
       <div className="impact-grid">{impact.map(([value, label], i) => <motion.div key={label} initial={{ opacity: 0, scale: .92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .35 + i * .07 }} whileHover={{ y: -4 }}><strong>{value}</strong><span>{label}</span></motion.div>)}</div>
     </motion.div>
   </section>
@@ -84,7 +84,7 @@ function ResumeViewer({ open, onClose }) {
     window.addEventListener('keydown', onKey)
     return () => { document.body.style.overflow = previous; window.removeEventListener('keydown', onKey) }
   }, [open, onClose])
-  const resumePath = '/artifacts/resume/AarizZafar_resume.pdf'
+  const resumePath = `${import.meta.env.BASE_URL}artifacts/resume/AarizZafar_resume.pdf`
   return <AnimatePresence>{open && <motion.div className="resume-viewer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
     <button className="resume-backdrop" onClick={onClose} aria-label="Close resume viewer" />
     <motion.div className="resume-window" role="dialog" aria-modal="true" aria-label="Aariz Zafar resume" initial={{ opacity: 0, y: 24, scale: .97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 16, scale: .98 }} transition={{ type: 'spring', stiffness: 250, damping: 25 }}>
