@@ -96,5 +96,10 @@ export const liveProjects = [
     name: 'NanoGPT',
     description: 'Create your own LLM',
     url: 'http://172.198.72.223'
+  },
+  {
+    name: 'BPE Tokenizer',
+    description: 'Tokenize your text data',
+    url: 'http://172.198.72.223:8001'
   }
 ]
