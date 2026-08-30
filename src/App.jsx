@@ -60,7 +60,7 @@ function Expertise() {
 
 function Projects() {
   return <section className="shell section"><SectionTitle number="03" kicker="Live lab" title="Try what I build." copy="Working deployments—not just screenshots or slide decks." />
-    <div className="projects-grid">{liveProjects.map((project, i) => <Reveal key={project.name} className="project-card"><div><span>LIVE PROJECT / 0{i + 1}</span><h3>{project.name}</h3><p>{project.description}</p></div><a href={`microsoft-edge:${project.url}`} target="_blank" rel="noreferrer" aria-label={`Open ${project.name} in Edge`}><ArrowUpRight /></a></Reveal>)}</div>
+    <div className="projects-grid">{liveProjects.map((project, i) => <Reveal key={project.name} className="project-card"><div><span>LIVE PROJECT / 0{i + 1}</span><h3>{project.name}</h3><p>{project.description}</p></div><a href={project.url} target="_blank" rel="noreferrer" aria-label={`Open ${project.name}`}><ArrowUpRight /></a></Reveal>)}</div>
   </section>
 }
 

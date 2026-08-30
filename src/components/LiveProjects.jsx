@@ -6,14 +6,14 @@ import { liveProjects } from '../data/resumeData.js'
 function ProjectCard({ name, description, url, logo }) {
   return (
     <a
-      href={`microsoft-edge:${url}`}
+      href={url}
       target="_blank"
       rel="noopener noreferrer"
       className="group flex flex-col gap-3 p-5 bg-white border border-gray-200 rounded-xl
                  shadow-[inset_1px_1px_2px_rgba(255,255,255,0.9),inset_-1px_-1px_2px_rgba(0,0,0,0.04),0_2px_6px_rgba(0,0,0,0.04)]
                  hover:border-accent2 hover:shadow-[0_6px_16px_rgba(37,99,235,0.12)] hover:-translate-y-0.5
                  transition-all duration-200"
-      aria-label={`Open ${name} in Edge`}
+      aria-label={`Open ${name}`}
     >
       <div className="flex items-center gap-3">
         {logo ? (
