@@ -100,6 +100,6 @@ export const liveProjects = [
   {
     name: 'BPE Tokenizer',
     description: 'Tokenize your text data',
-    url: 'http://172.198.72.223:8001'
+    url: 'https://lemon-dune-08f4e870f.7.azurestaticapps.net/'
   }
 ]
