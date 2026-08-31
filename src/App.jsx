@@ -6,6 +6,7 @@ import { awards, certificationGroups, education, experience, liveProjects, profi
 
 const nav = [['work', 'Work'], ['expertise', 'Expertise'], ['credentials', 'Credentials'], ['contact', 'Contact']]
 const impact = [['95%', 'PPE detection accuracy'], ['40+', 'HVAC fault scenarios'], ['30%', 'less retrieval effort'], ['10%', 'efficiency improvement']]
+const springHover = { type: 'spring', stiffness: 360, damping: 24 }
 
 function Reveal({ children, className = '', delay = 0 }) {
   return <motion.div className={className} initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }} whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} viewport={{ once: true, amount: .12 }} transition={{ duration: .75, delay, ease: [.22, 1, .36, 1] }}>{children}</motion.div>
@@ -16,6 +17,7 @@ function SectionTitle({ number, kicker, title, copy }) {
 }
 
 function Header({ onEmail }) {
+  return <ProHeader onEmail={onEmail} />
   const [open, setOpen] = useState(false)
   return <motion.header className="topbar-wrap" initial={{ opacity: 0, y: -24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}><div className="topbar">
     <a className="brand" href="#home" aria-label="Aariz Zafar home">AZ<span>.</span></a>
@@ -23,6 +25,23 @@ function Header({ onEmail }) {
     <button className="mini-cta" onClick={onEmail}>Let’s talk <ArrowUpRight size={15} /></button>
     <button className="menu-button" onClick={() => setOpen(!open)} aria-label="Toggle navigation">{open ? <X /> : <Menu />}</button>
   </div>{open && <motion.nav className="mobile-nav" initial={{ opacity: 0, y: -10, scale: .98 }} animate={{ opacity: 1, y: 0, scale: 1 }}>{nav.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setOpen(false)}>{label}</a>)}</motion.nav>}</motion.header>
+}
+
+function ProHeader({ onEmail }) {
+  const [open, setOpen] = useState(false)
+  const { scrollY } = useScroll()
+  const topbarScale = useTransform(scrollY, [0, 140], [1, .985])
+  const topbarY = useTransform(scrollY, [0, 140], [0, -4])
+
+  return <motion.header className="topbar-wrap" initial={{ opacity: 0, y: -24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
+    <motion.div className="topbar" style={{ scale: topbarScale, y: topbarY }}>
+      <motion.a className="brand" href="#home" aria-label="Aariz Zafar home" whileHover={{ y: -2, rotate: -2 }} whileTap={{ scale: .96 }} transition={springHover}>AZ<span>.</span></motion.a>
+      <nav className="desktop-nav">{nav.map(([id, label]) => <motion.a key={id} href={`#${id}`} whileHover={{ y: -2 }} whileTap={{ scale: .96 }} transition={springHover}>{label}</motion.a>)}</nav>
+      <motion.button className="mini-cta" onClick={onEmail} whileHover={{ y: -2 }} whileTap={{ scale: .97 }} transition={springHover}>Let's talk <ArrowUpRight size={15} /></motion.button>
+      <motion.button className="menu-button" onClick={() => setOpen(!open)} aria-label="Toggle navigation" whileTap={{ scale: .92 }}>{open ? <X /> : <Menu />}</motion.button>
+    </motion.div>
+    {open && <motion.nav className="mobile-nav" initial={{ opacity: 0, y: -10, scale: .98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: .98 }}>{nav.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setOpen(false)}>{label}</a>)}</motion.nav>}
+  </motion.header>
 }
 
 function Hero({ onEmail }) {
@@ -33,11 +52,11 @@ function Hero({ onEmail }) {
       <h1>Aariz<br /><em>Zafar.</em></h1>
       <h2 className="hero-statement">Building AI that works in the real world.</h2>
       <p className="hero-lede">I turn messy industrial data into dependable computer vision, predictive maintenance, and cloud AI products.</p>
-      <div className="hero-actions"><a className="primary-button" href="#work">See my impact <ArrowDownRight size={18} /></a><button className="text-link" onClick={onEmail}>Email me <ArrowUpRight size={17} /></button></div>
+      <div className="hero-actions"><motion.a className="primary-button" href="#work" whileHover={{ y: -3 }} whileTap={{ scale: .98 }} transition={springHover}>See my impact <ArrowDownRight size={18} /></motion.a><motion.button className="text-link" onClick={onEmail} whileHover={{ x: 3 }} whileTap={{ scale: .98 }} transition={springHover}>Email me <ArrowUpRight size={17} /></motion.button></div>
     </motion.div>
     <motion.div className="hero-side" initial={{ opacity: 0, x: 34 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .85, delay: .12, ease: [.22, 1, .36, 1] }}>
       <motion.div className="portrait" whileHover={{ y: -5 }} transition={{ type: 'spring', stiffness: 220, damping: 20 }}><img src={`${import.meta.env.BASE_URL}profile.jpg`} alt="Aariz Zafar" /><div className="portrait-caption"><span><MapPin size={14} /> {profile.location}</span><strong>1+ year building applied AI</strong></div></motion.div>
-      <div className="impact-grid">{impact.map(([value, label], i) => <motion.div key={label} initial={{ opacity: 0, scale: .92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .35 + i * .07 }} whileHover={{ y: -4 }}><strong>{value}</strong><span>{label}</span></motion.div>)}</div>
+      <div className="impact-grid">{impact.map(([value, label], i) => <motion.div key={label} initial={{ opacity: 0, scale: .92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .35 + i * .07 }} whileHover={{ y: -5, scale: 1.02 }} whileTap={{ scale: .98 }}><strong>{value}</strong><span>{label}</span></motion.div>)}</div>
     </motion.div>
   </section>
 }
@@ -59,8 +78,15 @@ function Expertise() {
 }
 
 function Projects() {
+  return <ProProjects />
   return <section className="shell section"><SectionTitle number="03" kicker="Live lab" title="Try what I build." copy="Working deployments—not just screenshots or slide decks." />
     <div className="projects-grid">{liveProjects.map((project, i) => <Reveal key={project.name} className="project-card"><div><span>LIVE PROJECT / 0{i + 1}</span><h3>{project.name}</h3><p>{project.description}</p></div><a href={project.url} target="_blank" rel="noreferrer" aria-label={`Open ${project.name}`}><ArrowUpRight /></a></Reveal>)}</div>
+  </section>
+}
+
+function ProProjects() {
+  return <section className="shell section"><SectionTitle number="03" kicker="Live lab" title="Try what I build." copy="Working deploymentsâ€”not just screenshots or slide decks." />
+    <div className="projects-grid">{liveProjects.map((project, i) => <Reveal key={project.name} className="project-card-shell" delay={i * .08}><motion.article className="project-card" whileHover={{ y: -8 }} transition={springHover}><div><span>LIVE PROJECT / 0{i + 1}</span><h3>{project.name}</h3><p>{project.description}</p></div><motion.a href={project.url} target="_blank" rel="noreferrer" aria-label={`Open ${project.name}`} whileHover={{ rotate: 8, scale: 1.08 }} whileTap={{ scale: .92 }} transition={springHover}><ArrowUpRight /></motion.a></motion.article></Reveal>)}</div>
   </section>
 }
 
