@@ -4,13 +4,13 @@ export const profile = {
   name: 'Aariz Zafar',
   location: 'Bangalore, India',
   title: 'Machine Learning Engineer',
-  tagline: 'Computer Vision · Predictive Analytics · Cloud AI',
+  tagline: 'Data Analysis · Cloud AI · ML',
   email: 'aariz.zafar01@gmail.com',
   phone: '+91 9353707832',
   github: 'https://github.com/AarizZafar',
   linkedin: 'https://linkedin.com/in/aariz-zafar',
   summary:
-    'Results-driven Computer Science Engineering graduate with 1+ year of hands-on industry experience in Machine Learning, Data Science, and Cloud Computing. Specialized in developing AI/ML solutions for predictive maintenance, synthetic data generation using physics-based simulation, and computer vision applications for industrial safety. Proficient in Python, PyTorch, PySpark, and Azure cloud technologies, with three Microsoft Azure certifications.'
+    'Results-driven Computer Science Engineering graduate with 1.5+ years of hands-on industry experience in Machine Learning, Data Science, and Cloud Computing. Specialized in developing AI/ML solutions for predictive maintenance, synthetic data generation using physics-based simulation, and computer vision applications for industrial safety. Proficient in Python, PyTorch, PySpark, and Azure cloud technologies, with three Microsoft Azure certifications.'
 }
 
 export const education = {
@@ -26,7 +26,7 @@ export const skillGroups = [
   { category: 'Computer Vision', skills: ['OpenCV', 'PPE Violation Detection', 'Object Detection', 'Image Preprocessing'] },
   { category: 'Data Analysis', skills: ['NumPy', 'Pandas', 'Feature Engineering', 'Exploratory Data Analysis'] },
   { category: 'Big Data & Data Engineering', skills: ['Apache Spark (PySpark)', 'Apache Kafka', 'Apache Airflow', 'Hadoop', 'HDFS', 'MapReduce', 'YARN'] },
-  { category: 'Cloud & MLOps', skills: ['Azure Data Factory', 'Databricks', 'Synapse Analytics', 'ADLS Gen2', 'GCP Dataproc', 'Docker'] },
+  { category: 'Cloud & MLOps', skills: ['Azure Data Factory', 'Databricks', 'Synapse Analytics', 'ADLS Gen2', 'GCP Dataproc', 'Jenkins', 'GitHub Actions', 'Docker'] },
   { category: 'Databases', skills: ['PostgreSQL', 'MySQL', 'MongoDB'] },
   { category: 'Domain Expertise', skills: ['Predictive Maintenance', 'Fault Detection & Diagnosis', 'Building Energy Simulation', 'PPE Compliance Monitoring', 'Sustainability & Energy Optimization'] }
 ]
@@ -51,9 +51,10 @@ export const experience = [
     period: 'Dec 2024 – Mar 2026',
     logo: asset('artifacts/company_logo/LivNSense.png'),
     points: [
-      'Developed an end-to-end machine learning pipeline for asphalt plant optimization using exploratory data analysis, statistical modelling, and anomaly detection on large-scale manufacturing time-series data, improving operational efficiency by 10%.',
+      'Developed asphalt manufacturing process analytics using exploratory data analysis, statistical modelling, and anomaly detection on large-scale plant time-series data, supporting 10-15% gas-consumption and resource savings.',
       'Designed and deployed a domain-specific RAG solution using LangChain, Hugging Face Transformers, and vector embeddings, reducing engineering knowledge retrieval effort by 30%.',
-      'Enhanced an industrial PPE detection system by developing a high-performance C++ image preprocessing pipeline, improving object detection accuracy from 75% to 95% for real-time monitoring of 100+ workers.'
+      'Improved YOLO-model detection accuracy by 9% by testing multiple image-enhancement techniques that increased contrast and visibility for real-time PPE monitoring.',
+      'Defined business-impact KPIs that connected model performance, process engineering outcomes, and operational decision-making for industrial AI projects.'
     ]
   },
   {
@@ -87,8 +88,21 @@ export const certificationGroups = [
 ]
 
 export const awards = [
-  { title: 'Best Employee Award', detail: 'Recognized for outstanding contribution to AI-based industrial optimization projects.' },
-  { title: 'Automation India Expo 2026', detail: 'Represented LivNSense, demonstrating AI-driven industrial automation solutions to industry partners.' }
+  {
+    title: 'Star Performer Award',
+    detail: 'Recognized for strong delivery and ownership across AI-based industrial optimization projects.',
+    files: [{ src: asset('artifacts/awards/start_performer_award.png'), label: 'Award certificate' }]
+  },
+  {
+    title: 'Certificate of Appreciation',
+    detail: 'Awarded for contributions to applied AI initiatives and customer-facing project demonstrations.',
+    files: [{ src: asset('artifacts/awards/certificate_of_appreciation.png'), label: 'Certificate' }]
+  },
+  {
+    title: 'Automation Expo 2025',
+    detail: 'Represented LivNSense at Automation Expo 2025, held August 11-14 at the Bombay Exhibition Centre in Goregaon, Mumbai; demonstrated AI projects and interacted with visitors from multiple countries.',
+    link: 'https://www.linkedin.com/posts/livnsense-technologies-pvt-ltd_aiinnovation-artificialintelligence-futureofwork-activity-7360908174301802496-suIu'
+  }
 ]
 
 export const liveProjects = [

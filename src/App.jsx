@@ -41,16 +41,15 @@ const navItems = [
 ]
 
 const impactStats = [
-  ['95%', 'PPE detection accuracy'],
-  ['40+', 'HVAC fault scenarios'],
-  ['30%', 'less retrieval effort'],
-  ['10%', 'efficiency lift']
+  ['10-15%', 'gas and resource savings in asphalt manufacturing'],
+  ['+9%', 'YOLO detection accuracy from image enhancement'],
+  ['Business KPIs', 'metrics tied to process and operational impact']
 ]
 
 const focusAreas = [
   ['Computer Vision', 'Industrial safety systems, visual preprocessing, detection workflows'],
   ['Predictive Maintenance', 'HVAC fault diagnosis, synthetic sensor data, anomaly detection'],
-  ['Cloud AI', 'Azure data platforms, RAG systems, production-ready ML pipelines']
+  ['Cloud AI', 'Azure, GCP']
 ]
 
 const springHover = { type: 'spring', stiffness: 340, damping: 24 }
@@ -177,6 +176,18 @@ function Hero({ onEmail }) {
               Start a conversation
             </motion.button>
           </div>
+          <div className="hero-insights" aria-label="Current focus and experience">
+            <div className="focus-card">
+              <span>Current focus</span>
+              <strong>AI Engineer at Trinity Mobility</strong>
+              <p>Fault diagnosis, simulation data, and operational ML systems.</p>
+            </div>
+            <div className="experience-card">
+              <span>Experience</span>
+              <strong>1.5+</strong>
+              <p>years of work experience building applied AI for industrial teams.</p>
+            </div>
+          </div>
         </motion.div>
 
         <motion.aside
@@ -192,13 +203,8 @@ function Hero({ onEmail }) {
                 <MapPin size={14} />
                 {profile.location}
               </span>
-              <strong>Applied AI across manufacturing, energy, and safety.</strong>
+              <strong>1.5+ years building applied AI across manufacturing, energy, and safety.</strong>
             </div>
-          </div>
-          <div className="signal-panel">
-            <span>Current focus</span>
-            <strong>AI Engineer at Trinity Mobility</strong>
-            <p>Fault diagnosis, simulation data, and operational ML systems.</p>
           </div>
         </motion.aside>
       </div>
@@ -343,6 +349,7 @@ function Projects() {
 
 function Credentials() {
   const [activeCert, setActiveCert] = useState(null)
+  const [activeAward, setActiveAward] = useState(null)
   const [resumeOpen, setResumeOpen] = useState(false)
   const certs = useMemo(() => certificationGroups.flatMap((group) => group.items), [])
 
@@ -385,14 +392,33 @@ function Credentials() {
             <Award size={28} />
             <p className="eyebrow">Recognition</p>
             {awards.map((item) => (
-              <div key={item.title}>
-                <h3>{item.title}</h3>
-                <p>{item.detail}</p>
-              </div>
+              <article key={item.title} className="award-item">
+                {item.files?.length ? (
+                  <button className="award-open" onClick={() => setActiveAward(item)}>
+                    <span>
+                      <h3>{item.title}</h3>
+                      <p>{item.detail}</p>
+                    </span>
+                    <ArrowUpRight size={17} />
+                  </button>
+                ) : (
+                  <>
+                    <h3>{item.title}</h3>
+                    <p>{item.detail}</p>
+                  </>
+                )}
+                {item.link && (
+                  <a className="award-link" href={item.link} target="_blank" rel="noreferrer">
+                    <ExternalLink size={15} />
+                    LivNSense post
+                  </a>
+                )}
+              </article>
             ))}
           </div>
         </div>
         <CertificateViewer cert={activeCert} onClose={() => setActiveCert(null)} />
+        <CertificateViewer cert={activeAward} onClose={() => setActiveAward(null)} />
         <ResumeViewer open={resumeOpen} onClose={() => setResumeOpen(false)} />
       </div>
     </section>
