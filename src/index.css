@@ -569,7 +569,7 @@ img {
 
 .stats-strip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-top: 16px;
   will-change: transform;
@@ -611,24 +611,6 @@ img {
   color: #66717f;
   font-size: 0.82rem;
   font-weight: 750;
-}
-
-.visitor-tile {
-  background:
-    linear-gradient(135deg, rgba(18, 27, 42, 0.92), rgba(31, 84, 112, 0.9)),
-    #121b2a;
-}
-
-.visitor-tile strong {
-  color: #ffffff;
-}
-
-.visitor-tile span {
-  color: rgba(255, 255, 255, 0.76);
-}
-
-.visitor-tile::after {
-  background: linear-gradient(90deg, #e7b75f, rgba(255, 255, 255, 0.72), transparent);
 }
 
 .section {

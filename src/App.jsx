@@ -88,65 +88,6 @@ function ScrollBackground() {
   )
 }
 
-function VisitorCounter() {
-  const [count, setCount] = useState(null)
-  const [ready, setReady] = useState(false)
-  const goatCounterCode = import.meta.env.VITE_GOATCOUNTER_CODE
-
-  useEffect(() => {
-    if (!goatCounterCode) return undefined
-
-    let cancelled = false
-    const scriptId = 'goatcounter-tracker'
-    const counterBase = `https://${goatCounterCode}.goatcounter.com`
-
-    async function refreshCount() {
-      try {
-        const response = await fetch(`${counterBase}/counter/TOTAL.json`, { cache: 'no-store' })
-        if (!response.ok) throw new Error('Visitor count unavailable')
-        const data = await response.json()
-        if (!cancelled) {
-          setCount(data.count)
-          setReady(true)
-        }
-      } catch {
-        if (!cancelled) setReady(false)
-      }
-    }
-
-    if (!window.__portfolioVisitTracked) {
-      window.__portfolioVisitTracked = true
-      let script = document.getElementById(scriptId)
-      if (!script) {
-        script = document.createElement('script')
-        script.id = scriptId
-        script.async = true
-        script.src = 'https://gc.zgo.at/count.js'
-        script.dataset.goatcounter = `${counterBase}/count`
-        script.addEventListener('load', refreshCount, { once: true })
-        document.head.appendChild(script)
-      } else {
-        refreshCount()
-      }
-    } else {
-      refreshCount()
-    }
-
-    const timer = window.setTimeout(refreshCount, 2200)
-    return () => {
-      cancelled = true
-      window.clearTimeout(timer)
-    }
-  }, [goatCounterCode])
-
-  return (
-    <Reveal className="stat-tile visitor-tile" delay={0.15}>
-      <strong>{goatCounterCode ? (count ?? '...') : 'Live'}</strong>
-      <span>{ready ? 'people have visited this portfolio' : 'visitor counter ready for GoatCounter'}</span>
-    </Reveal>
-  )
-}
-
 function Reveal({ children, className = '', delay = 0, hover = false }) {
   return (
     <motion.div
@@ -343,7 +284,6 @@ function Hero({ onEmail }) {
             <span>{label}</span>
           </Reveal>
         ))}
-        <VisitorCounter />
       </motion.div>
     </section>
   )
