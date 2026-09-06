@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -34,6 +34,7 @@ import {
 
 const navItems = [
   ['work', 'Work'],
+  ['education', 'Education'],
   ['expertise', 'Expertise'],
   ['projects', 'Projects'],
   ['credentials', 'Credentials'],
@@ -41,9 +42,9 @@ const navItems = [
 ]
 
 const impactStats = [
-  ['10-15%', 'gas and resource savings in asphalt manufacturing'],
-  ['+9%', 'YOLO detection accuracy from image enhancement'],
-  ['Business KPIs', 'metrics tied to process and operational impact']
+  ['15%', 'forecasting accuracy improvement'],
+  ['10%', 'operational efficiency improvement'],
+  ['30%', 'less retrieval effort']
 ]
 
 const focusAreas = [
@@ -54,14 +55,107 @@ const focusAreas = [
 
 const springHover = { type: 'spring', stiffness: 340, damping: 24 }
 
-function Reveal({ children, className = '', delay = 0 }) {
+function ScrollBackground() {
+  const reduceMotion = useReducedMotion()
+  const { scrollYProgress } = useScroll()
+  const gridY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['0px', '-180px'])
+  const rulerY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['0px', '220px'])
+  const diagonalY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['0px', '-120px'])
+  const flowY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['0px', '140px'])
+  const scanX = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['15vw', '15vw'] : ['-35vw', '100vw'])
+  const mountainFarY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['24px', '-110px'])
+  const mountainMidY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['58px', '-210px'])
+  const mountainNearY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['96px', '-340px'])
+  const mountainMistY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['40px', '-170px'])
+  const mountainScale = useTransform(scrollYProgress, [0, 0.45, 1], reduceMotion ? [1, 1, 1] : [1.02, 1.08, 1.14])
+  const mountainOpacity = useTransform(scrollYProgress, [0, 0.18, 0.7, 1], [0.78, 0.9, 0.74, 0.48])
+  const mountainAsset = `${import.meta.env.BASE_URL}mountain-parallax.jpg`
+
+  return (
+    <div className="scroll-background" aria-hidden="true">
+      <motion.div className="scroll-bg-grid" style={{ y: gridY }} />
+      <motion.div className="scroll-bg-rulers" style={{ y: rulerY }} />
+      <motion.div className="scroll-bg-diagonal" style={{ y: diagonalY }} />
+      <motion.div className="mountain-parallax" style={{ scale: mountainScale, opacity: mountainOpacity }}>
+        <motion.img className="mountain-layer mountain-layer-far" src={mountainAsset} alt="" decoding="async" style={{ y: mountainFarY }} />
+        <motion.img className="mountain-layer mountain-layer-mid" src={mountainAsset} alt="" decoding="async" style={{ y: mountainMidY }} />
+        <motion.img className="mountain-layer mountain-layer-near" src={mountainAsset} alt="" decoding="async" style={{ y: mountainNearY }} />
+        <motion.div className="mountain-mist" style={{ y: mountainMistY }} />
+      </motion.div>
+      <motion.div className="scroll-bg-flow" style={{ y: flowY }} />
+      <motion.div className="scroll-bg-scan" style={{ x: scanX }} />
+    </div>
+  )
+}
+
+function VisitorCounter() {
+  const [count, setCount] = useState(null)
+  const [ready, setReady] = useState(false)
+  const goatCounterCode = import.meta.env.VITE_GOATCOUNTER_CODE
+
+  useEffect(() => {
+    if (!goatCounterCode) return undefined
+
+    let cancelled = false
+    const scriptId = 'goatcounter-tracker'
+    const counterBase = `https://${goatCounterCode}.goatcounter.com`
+
+    async function refreshCount() {
+      try {
+        const response = await fetch(`${counterBase}/counter/TOTAL.json`, { cache: 'no-store' })
+        if (!response.ok) throw new Error('Visitor count unavailable')
+        const data = await response.json()
+        if (!cancelled) {
+          setCount(data.count)
+          setReady(true)
+        }
+      } catch {
+        if (!cancelled) setReady(false)
+      }
+    }
+
+    if (!window.__portfolioVisitTracked) {
+      window.__portfolioVisitTracked = true
+      let script = document.getElementById(scriptId)
+      if (!script) {
+        script = document.createElement('script')
+        script.id = scriptId
+        script.async = true
+        script.src = 'https://gc.zgo.at/count.js'
+        script.dataset.goatcounter = `${counterBase}/count`
+        script.addEventListener('load', refreshCount, { once: true })
+        document.head.appendChild(script)
+      } else {
+        refreshCount()
+      }
+    } else {
+      refreshCount()
+    }
+
+    const timer = window.setTimeout(refreshCount, 2200)
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+    }
+  }, [goatCounterCode])
+
+  return (
+    <Reveal className="stat-tile visitor-tile" delay={0.15}>
+      <strong>{goatCounterCode ? (count ?? '...') : 'Live'}</strong>
+      <span>{ready ? 'people have visited this portfolio' : 'visitor counter ready for GoatCounter'}</span>
+    </Reveal>
+  )
+}
+
+function Reveal({ children, className = '', delay = 0, hover = false }) {
   return (
     <motion.div
       className={className}
       initial={{ opacity: 0, y: 22 }}
       whileInView={{ opacity: 1, y: 0 }}
+      whileHover={hover ? { y: -6, scale: 1.015 } : undefined}
       viewport={{ once: true, amount: 0.16 }}
-      transition={{ duration: 0.62, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={hover ? springHover : { duration: 0.62, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
@@ -136,68 +230,102 @@ function Header({ onEmail }) {
 }
 
 function Hero({ onEmail }) {
+  const heroRef = useRef(null)
+  const reduceMotion = useReducedMotion()
+  const pointerX = useMotionValue(0)
+  const pointerY = useMotionValue(0)
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start']
+  })
+  const copyY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['0px', '-82px'])
+  const copyOpacity = useTransform(scrollYProgress, [0, 0.72, 1], [1, 0.92, 0.62])
+  const showcaseY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['0px', '-150px'])
+  const showcaseScale = useTransform(scrollYProgress, [0, 1], reduceMotion ? [1, 1] : [1, 0.95])
+  const statsY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0px', '0px'] : ['0px', '-54px'])
+  const portraitX = useTransform(pointerX, [-1, 1], reduceMotion ? ['0px', '0px'] : ['14px', '-14px'])
+  const portraitY = useTransform(pointerY, [-1, 1], reduceMotion ? ['0px', '0px'] : ['-10px', '10px'])
+  const portraitRotateX = useTransform(pointerY, [-1, 1], reduceMotion ? ['0deg', '0deg'] : ['3deg', '-3deg'])
+  const portraitRotateY = useTransform(pointerX, [-1, 1], reduceMotion ? ['0deg', '0deg'] : ['-4deg', '4deg'])
+
+  function trackPointer(event) {
+    if (reduceMotion) return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    pointerX.set((event.clientX - bounds.left) / bounds.width * 2 - 1)
+    pointerY.set((event.clientY - bounds.top) / bounds.height * 2 - 1)
+  }
+
+  function resetPointer() {
+    pointerX.set(0)
+    pointerY.set(0)
+  }
+
   return (
-    <section id="home" className="hero">
+    <section id="home" className="hero" ref={heroRef} onMouseMove={trackPointer} onMouseLeave={resetPointer}>
       <div className="shell hero-grid">
         <motion.div
           className="hero-copy"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+          style={{ y: copyY, opacity: copyOpacity }}
         >
-          <div className="availability">
-            <span />
-            Available for ambitious AI teams
-          </div>
-          <p className="eyebrow">{profile.title} / Bangalore, India</p>
-          <h1>Aariz Zafar</h1>
-          <p className="hero-statement">
-            Machine learning engineer building computer vision, predictive maintenance, and cloud AI systems for industrial teams.
-          </p>
-          <div className="hero-actions">
-            <motion.a
-              className="primary-button"
-              href="#work"
-              whileHover={{ y: -3 }}
-              whileTap={{ scale: 0.98 }}
-              transition={springHover}
-            >
-              <ArrowDownRight size={18} />
-              See impact
-            </motion.a>
-            <motion.button
-              className="secondary-button"
-              onClick={onEmail}
-              whileHover={{ y: -3 }}
-              whileTap={{ scale: 0.98 }}
-              transition={springHover}
-            >
-              <Send size={17} />
-              Start a conversation
-            </motion.button>
-          </div>
-          <div className="hero-insights" aria-label="Current focus and experience">
-            <div className="focus-card">
-              <span>Current focus</span>
-              <strong>AI Engineer at Trinity Mobility</strong>
-              <p>Fault diagnosis, simulation data, and operational ML systems.</p>
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <p className="eyebrow">{profile.title} / Bangalore, India</p>
+            <h1>Aariz Zafar</h1>
+            <p className="hero-statement">
+              Machine learning engineer building computer vision, predictive maintenance, and cloud AI systems for industrial teams.
+            </p>
+            <div className="hero-actions">
+              <motion.a
+                className="primary-button"
+                href="#work"
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.98 }}
+                transition={springHover}
+              >
+                <ArrowDownRight size={18} />
+                See impact
+              </motion.a>
+              <motion.button
+                className="secondary-button"
+                onClick={onEmail}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.98 }}
+                transition={springHover}
+              >
+                <Send size={17} />
+                Start a conversation
+              </motion.button>
             </div>
-            <div className="experience-card">
-              <span>Experience</span>
-              <strong>1.5+</strong>
-              <p>years of work experience building applied AI for industrial teams.</p>
+            <div className="hero-insights" aria-label="Current focus and experience">
+              <div className="focus-card">
+                <span>Current focus</span>
+                <strong>AI Engineer at Trinity Mobility</strong>
+                <p>Fault diagnosis, simulation data, and operational ML systems.</p>
+              </div>
+              <div className="experience-card">
+                <span>Experience</span>
+                <strong>1.5+</strong>
+                <p>years of work experience building applied AI for industrial teams.</p>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
 
         <motion.aside
           className="hero-showcase"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.72, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          style={{ y: showcaseY, scale: showcaseScale }}
         >
-          <div className="portrait-panel">
-            <img src={`${import.meta.env.BASE_URL}profile.jpg`} alt="Aariz Zafar" />
+          <motion.div
+            className="portrait-panel"
+            style={{ x: portraitX, y: portraitY, rotateX: portraitRotateX, rotateY: portraitRotateY }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.72, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <img src={`${import.meta.env.BASE_URL}profile.jpg`} alt="Aariz Zafar" fetchPriority="high" decoding="async" />
             <div className="portrait-caption">
               <span>
                 <MapPin size={14} />
@@ -205,17 +333,18 @@ function Hero({ onEmail }) {
               </span>
               <strong>1.5+ years building applied AI across manufacturing, energy, and safety.</strong>
             </div>
-          </div>
+          </motion.div>
         </motion.aside>
       </div>
-      <div className="shell stats-strip" aria-label="Selected outcomes">
+      <motion.div className="shell stats-strip" aria-label="Selected outcomes" style={{ y: statsY }}>
         {impactStats.map(([value, label], index) => (
           <Reveal className="stat-tile" key={label} delay={index * 0.05}>
             <strong>{value}</strong>
             <span>{label}</span>
           </Reveal>
         ))}
-      </div>
+        <VisitorCounter />
+      </motion.div>
     </section>
   )
 }
@@ -234,7 +363,9 @@ function Work() {
           <Reveal key={job.company} className="job-card" delay={index * 0.05}>
             <div className="job-meta">
               <span>{String(index + 1).padStart(2, '0')}</span>
-              <div className="logo-well">{job.logo ? <img src={job.logo} alt="" /> : <BriefcaseBusiness />}</div>
+              <div className="logo-well">
+                {job.logo ? <img src={job.logo} alt="" loading="lazy" decoding="async" /> : <BriefcaseBusiness />}
+              </div>
               <div>
                 <strong>{job.company}</strong>
                 <p>{job.period}</p>
@@ -259,32 +390,53 @@ function Work() {
   )
 }
 
+function Education() {
+  return (
+    <section id="education" className="section education-section">
+      <div className="shell">
+        <SectionTitle
+          number="02"
+          kicker="Education"
+          title="Academic foundation."
+          copy="Computer Science fundamentals with a strong applied AI and engineering focus."
+        />
+        <Reveal className="education-card">
+          <div>
+            <span>Vellore Institute of Technology AP</span>
+            <h3>{education.degree}</h3>
+            <p>CGPA: {education.cgpa}</p>
+          </div>
+          <strong>{education.year}</strong>
+        </Reveal>
+      </div>
+    </section>
+  )
+}
+
 function Expertise() {
   return (
     <section id="expertise" className="section expertise-section">
       <div className="shell">
         <SectionTitle
-          number="02"
+          number="03"
           kicker="Expertise"
           title="Full-stack AI execution."
           copy="From data generation and model training to retrieval systems, deployment, and cloud operations."
         />
         <div className="expertise-grid">
-          <Reveal className="expertise-lead">
-            <BrainCircuit size={30} />
+          <Reveal className="expertise-lead" hover>
+            <motion.span
+              className="expertise-icon"
+              animate={{ y: [0, -6, 0], rotate: [0, 6, -4, 0] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <BrainCircuit size={30} />
+            </motion.span>
             <h3>I turn messy industrial data into working AI products.</h3>
-            <p>{profile.summary}</p>
-            <div className="education-panel">
-              <span>Education</span>
-              <strong>{education.degree}</strong>
-              <p>
-                {education.school} / {education.cgpa} / {education.year}
-              </p>
-            </div>
           </Reveal>
           <div className="focus-stack">
             {focusAreas.map(([title, copy], index) => (
-              <Reveal className="focus-row" key={title} delay={index * 0.05}>
+              <Reveal className="focus-row" key={title} delay={index * 0.05} hover>
                 <span>{String(index + 1).padStart(2, '0')}</span>
                 <div>
                   <strong>{title}</strong>
@@ -296,7 +448,7 @@ function Expertise() {
         </div>
         <div className="skill-cards">
           {skillGroups.map((group, index) => (
-            <Reveal key={group.category} className="skill-card" delay={(index % 4) * 0.04}>
+            <Reveal key={group.category} className="skill-card" delay={(index % 4) * 0.04} hover>
               <span>{String(index + 1).padStart(2, '0')}</span>
               <h3>{group.category}</h3>
               <div>
@@ -316,30 +468,41 @@ function Projects() {
   return (
     <section id="projects" className="section shell">
       <SectionTitle
-        number="03"
+        number="04"
         kicker="Live lab"
-        title="Working demos, not shelfware."
+        title="Working demos"
         copy="Small but real deployments that show how I think about language models, tokenization, and usable AI tools."
       />
+      <Reveal className="deployment-stack">
+        <span>Deployment stack</span>
+        <p>These projects are deployed across Azure VM, Azure Container Registry, Azure App Service, and Azure Static Web Apps.</p>
+      </Reveal>
       <div className="projects-grid">
         {liveProjects.map((project, index) => (
-          <Reveal key={project.name} className="project-card" delay={index * 0.08}>
-            <div>
-              <span>LIVE PROJECT / {String(index + 1).padStart(2, '0')}</span>
-              <h3>{project.name}</h3>
-              <p>{project.description}</p>
-            </div>
-            <motion.a
-              href={project.url}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Open ${project.name}`}
-              whileHover={{ rotate: 6, scale: 1.08 }}
-              whileTap={{ scale: 0.94 }}
+          <Reveal key={project.name} className="project-card-shell" delay={index * 0.08}>
+            <motion.article
+              className="project-card"
+              whileHover={{ y: -8, scale: 1.015 }}
+              whileTap={{ scale: 0.99 }}
               transition={springHover}
             >
-              <ExternalLink size={21} />
-            </motion.a>
+              <div>
+                <span>LIVE PROJECT / {String(index + 1).padStart(2, '0')}</span>
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+              </div>
+              <motion.a
+                href={project.url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Open ${project.name}`}
+                whileHover={{ rotate: 8, scale: 1.1 }}
+                whileTap={{ scale: 0.94 }}
+                transition={springHover}
+              >
+                <ExternalLink size={21} />
+              </motion.a>
+            </motion.article>
           </Reveal>
         ))}
       </div>
@@ -357,13 +520,19 @@ function Credentials() {
     <section id="credentials" className="section credentials-section">
       <div className="shell">
         <SectionTitle
-          number="04"
+          number="05"
           kicker="Credentials"
           title="Validated foundations."
           copy="Cloud, security, administration, and machine learning credentials backed by practical work."
         />
         <div className="credentials-layout">
-          <button className="resume-card" onClick={() => setResumeOpen(true)}>
+          <motion.button
+            className="resume-card"
+            onClick={() => setResumeOpen(true)}
+            whileHover={{ y: -6, scale: 1.015 }}
+            whileTap={{ scale: 0.98 }}
+            transition={springHover}
+          >
             <span className="resume-icon">
               <FileText size={28} />
             </span>
@@ -373,19 +542,22 @@ function Credentials() {
               <em>Experience, skills, and qualifications</em>
             </span>
             <ArrowUpRight size={22} />
-          </button>
+          </motion.button>
           <div className="cert-list">
             {certs.map((cert, index) => (
-              <button
+              <motion.button
                 key={cert.name}
                 className="cert-row"
                 onClick={() => cert.files?.length && setActiveCert(cert)}
+                whileHover={{ x: 6, scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                transition={springHover}
               >
                 <span>{String(index + 1).padStart(2, '0')}</span>
-                <img src={cert.logo} alt="" />
+                <img src={cert.logo} alt="" loading="lazy" decoding="async" />
                 <strong>{cert.name}</strong>
                 <ArrowUpRight size={17} />
-              </button>
+              </motion.button>
             ))}
           </div>
           <div className="awards-card">
@@ -486,10 +658,10 @@ function Contact({ onEmail }) {
     <section id="contact" className="section shell">
       <div className="contact-band">
         <div>
-          <p className="eyebrow">05 / Let's build something useful</p>
+          <p className="eyebrow">06 / Let's build something useful</p>
           <h2>Have an AI problem worth solving?</h2>
           <p>
-            Whether it is computer vision, predictive maintenance, RAG, or cloud data engineering, I would like to hear the hard version of the problem.
+            Let's collaborate to solve the hard version of the problem with practical AI systems.
           </p>
         </div>
         <div className="contact-actions">
@@ -633,11 +805,13 @@ export default function App() {
 
   return (
     <>
+      <ScrollBackground />
       <motion.div className="scroll-progress" style={{ scaleX: progress }} />
       <Header onEmail={() => setMessageOpen(true)} />
       <main>
         <Hero onEmail={() => setMessageOpen(true)} />
         <Work />
+        <Education />
         <Expertise />
         <Projects />
         <Credentials />

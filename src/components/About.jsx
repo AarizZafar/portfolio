@@ -29,8 +29,7 @@ export default function About() {
               </div>
               <h3 className="font-display font-bold text-ink text-lg">Professional Summary</h3>
             </div>
-            <p className="text-base md:text-lg text-ink leading-relaxed" style={{ color: '#1a2332' }}>{profile.summary}</p>
-            <p className="mt-5 text-muted leading-relaxed" style={{ color: '#64748b' }}>
+            <p className="text-base md:text-lg text-muted leading-relaxed" style={{ color: '#64748b' }}>
               My work spans predictive maintenance for industrial HVAC systems, physics-based
               synthetic data generation, computer vision for factory safety compliance, and
               retrieval-augmented generation systems — bridging classical ML, deep learning, and
